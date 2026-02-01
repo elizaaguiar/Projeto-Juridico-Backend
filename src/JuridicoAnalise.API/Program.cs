@@ -1,0 +1,86 @@
+using JuridicoAnalise.Application;
+using JuridicoAnalise.Infrastructure;
+using JuridicoAnalise.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// Services
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Jurídico Análise API", Version = "v1" });
+});
+
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// Application & Infrastructure
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+var app = builder.Build();
+
+// Database - Verifica conexão (tabelas criadas pelo init.sql)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    // Aguarda o banco estar disponível
+    var retries = 10;
+    while (retries > 0)
+    {
+        try
+        {
+            db.Database.CanConnect();
+            Log.Information("Conexão com banco de dados estabelecida");
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            Log.Warning("Aguardando banco de dados... Tentativas restantes: {Retries}", retries);
+            if (retries == 0) throw;
+            Thread.Sleep(2000);
+        }
+    }
+}
+
+// Middleware Pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// Não usar HTTPS redirect em ambiente Docker
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseCors("AllowAngular");
+app.UseAuthorization();
+app.MapControllers();
+
+Log.Information("API iniciada e pronta para receber requisições");
+
+app.Run();
