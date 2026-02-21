@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -71,16 +71,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Não usar HTTPS redirect em ambiente Docker
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-
 app.UseCors("AllowAngular");
 app.UseAuthorization();
 app.MapControllers();
 
 Log.Information("API iniciada e pronta para receber requisições");
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");

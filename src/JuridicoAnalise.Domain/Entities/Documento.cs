@@ -6,6 +6,7 @@ public class Documento : BaseEntity
 {
     public string NumeroProcesso { get; set; } = string.Empty;
     public string Setor { get; set; } = string.Empty;
+    public string? PalavraChaveUsada { get; set; }
     public DateTime DataPublicacao { get; set; }
     public DateTime? InicioPrazo { get; set; }
     public string? Conteudo { get; set; }

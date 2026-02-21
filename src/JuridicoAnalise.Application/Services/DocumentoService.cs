@@ -4,6 +4,7 @@ using JuridicoAnalise.Application.Interfaces;
 using JuridicoAnalise.Domain.Entities;
 using JuridicoAnalise.Domain.Enums;
 using JuridicoAnalise.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace JuridicoAnalise.Application.Services;
 
@@ -14,19 +15,22 @@ public class DocumentoService : IDocumentoService
     private readonly IClassificationService _classificationService;
     private readonly IExcelExportService _excelExportService;
     private readonly IMapper _mapper;
+    private readonly ILogger<DocumentoService> _logger;
 
     public DocumentoService(
         IDocumentoRepository documentoRepository,
         IUnifiedDocumentReaderService documentReaderService,
         IClassificationService classificationService,
         IExcelExportService excelExportService,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<DocumentoService> logger)
     {
         _documentoRepository = documentoRepository;
         _documentReaderService = documentReaderService;
         _classificationService = classificationService;
         _excelExportService = excelExportService;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<DocumentoDto>> GetAllAsync()
@@ -150,7 +154,7 @@ public class DocumentoService : IDocumentoService
                     var documento = new Documento
                     {
                         NomeArquivo = fileName,
-                        Setor = "N/A",
+                        Setor = "ERRO: Tipo de arquivo não suportado",
                         CaminhoArquivo = fileName,
                         MensagemErro = "Tipo de arquivo não suportado",
                         NumeroProcesso = "ERRO",
@@ -165,18 +169,33 @@ public class DocumentoService : IDocumentoService
                     // Extrair múltiplas publicações do documento
                     var publicacoes = await _classificationService.ExtractMultiplePublicationsAsync(content);
 
+                    int adicionados = 0;
+                    int filtrados = 0;
+
                     foreach (var pub in publicacoes)
                     {
+                        // Só adiciona se o setor foi identificado (não é N/A ou vazio)
+                        if (string.IsNullOrEmpty(pub.Setor) || pub.Setor == "N/A")
+                        {
+                            filtrados++;
+                            continue;
+                        }
+
                         var documento = new Documento
                         {
                             NomeArquivo = fileName,
-                            Setor = pub.Setor ?? "N/A",
+                            Setor = pub.Setor,
+                            PalavraChaveUsada = pub.PalavraChaveUsada,
                             CaminhoArquivo = fileName,
                             NumeroProcesso = pub.NumeroProcesso ?? "N/A",
                             DataPublicacao = pub.DataPublicacao ?? DateTime.UtcNow
                         };
                         documentos.Add(documento);
+                        adicionados++;
                     }
+
+                    _logger.LogInformation("Arquivo {FileName}: {Adicionados} publicações, {Filtrados} filtradas",
+                        fileName, adicionados, filtrados);
                 }
             }
             catch (Exception ex)
@@ -184,7 +203,7 @@ public class DocumentoService : IDocumentoService
                 var documento = new Documento
                 {
                     NomeArquivo = fileName,
-                    Setor = "N/A",
+                    Setor = $"ERRO: {ex.Message}",
                     CaminhoArquivo = fileName,
                     MensagemErro = ex.Message,
                     NumeroProcesso = "ERRO",

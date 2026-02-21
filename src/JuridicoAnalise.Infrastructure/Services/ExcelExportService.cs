@@ -14,12 +14,13 @@ public class ExcelExportService : IExcelExportService
         // Cabeçalhos
         worksheet.Cell(1, 1).Value = "PROCESSO";
         worksheet.Cell(1, 2).Value = "SETOR";
-        worksheet.Cell(1, 3).Value = "DATA PUBLICAÇÃO";
-        worksheet.Cell(1, 4).Value = "INÍCIO PRAZO";
-        worksheet.Cell(1, 5).Value = "ARQUIVO";
+        worksheet.Cell(1, 3).Value = "PALAVRA-CHAVE";
+        worksheet.Cell(1, 4).Value = "DATA PUBLICAÇÃO";
+        worksheet.Cell(1, 5).Value = "INÍCIO PRAZO";
+        worksheet.Cell(1, 6).Value = "ARQUIVO";
 
         // Estilizar cabeçalho
-        var headerRange = worksheet.Range(1, 1, 1, 5);
+        var headerRange = worksheet.Range(1, 1, 1, 6);
         headerRange.Style.Font.Bold = true;
         headerRange.Style.Fill.BackgroundColor = XLColor.DarkBlue;
         headerRange.Style.Font.FontColor = XLColor.White;
@@ -31,9 +32,10 @@ public class ExcelExportService : IExcelExportService
         {
             worksheet.Cell(row, 1).Value = doc.NumeroProcesso;
             worksheet.Cell(row, 2).Value = doc.Setor;
-            worksheet.Cell(row, 3).Value = doc.DataPublicacao.ToString("dd/MM/yyyy");
-            worksheet.Cell(row, 4).Value = doc.InicioPrazo?.ToString("dd/MM/yyyy") ?? "";
-            worksheet.Cell(row, 5).Value = doc.NomeArquivo;
+            worksheet.Cell(row, 3).Value = doc.PalavraChaveUsada ?? "";
+            worksheet.Cell(row, 4).Value = doc.DataPublicacao.ToString("dd/MM/yyyy");
+            worksheet.Cell(row, 5).Value = doc.InicioPrazo?.ToString("dd/MM/yyyy") ?? "";
+            worksheet.Cell(row, 6).Value = doc.NomeArquivo;
             row++;
         }
 
@@ -56,12 +58,13 @@ public class ExcelExportService : IExcelExportService
         // Cabeçalhos
         worksheet.Cell(1, 1).Value = "PROCESSO";
         worksheet.Cell(1, 2).Value = "SETOR";
-        worksheet.Cell(1, 3).Value = "DATA PUBLICAÇÃO";
-        worksheet.Cell(1, 4).Value = "INÍCIO PRAZO";
-        worksheet.Cell(1, 5).Value = "ARQUIVO";
+        worksheet.Cell(1, 3).Value = "PALAVRA-CHAVE";
+        worksheet.Cell(1, 4).Value = "DATA PUBLICAÇÃO";
+        worksheet.Cell(1, 5).Value = "INÍCIO PRAZO";
+        worksheet.Cell(1, 6).Value = "ARQUIVO";
 
         // Estilizar cabeçalho
-        var headerRange = worksheet.Range(1, 1, 1, 5);
+        var headerRange = worksheet.Range(1, 1, 1, 6);
         headerRange.Style.Font.Bold = true;
         headerRange.Style.Fill.BackgroundColor = XLColor.DarkBlue;
         headerRange.Style.Font.FontColor = XLColor.White;
@@ -72,9 +75,10 @@ public class ExcelExportService : IExcelExportService
         {
             worksheet.Cell(row, 1).Value = doc.NumeroProcesso;
             worksheet.Cell(row, 2).Value = doc.Setor;
-            worksheet.Cell(row, 3).Value = doc.DataPublicacao.ToString("dd/MM/yyyy");
-            worksheet.Cell(row, 4).Value = doc.InicioPrazo?.ToString("dd/MM/yyyy") ?? "";
-            worksheet.Cell(row, 5).Value = doc.NomeArquivo;
+            worksheet.Cell(row, 3).Value = doc.PalavraChaveUsada ?? "";
+            worksheet.Cell(row, 4).Value = doc.DataPublicacao.ToString("dd/MM/yyyy");
+            worksheet.Cell(row, 5).Value = doc.InicioPrazo?.ToString("dd/MM/yyyy") ?? "";
+            worksheet.Cell(row, 6).Value = doc.NomeArquivo;
             row++;
         }
 

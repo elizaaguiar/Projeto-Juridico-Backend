@@ -27,29 +27,29 @@ public class ClassificationService : IClassificationService
     // Palavras-chave para classificação de SETOR
     private static readonly Dictionary<string, string[]> SetorKeywords = new()
     {
-        ["EXECUÇÃO"] = new[] { "INDICAR MEIOS", "SEGUIMENTO DA EXECUÇÃO", "SEGUIMENTO DA EXECUCAO", "ENDEREÇO", "ENDERECO", "SOBRESTAMENTO" },
-        ["ALVARÁ"] = new[] { "EXPEDIDO ALVARÁ", "EXPEDIDO ALVARA" },
-        ["PERÍCIA/QUESITOS"] = new[] { "AGENDAMENTO", "PERÍCIA", "PERICIA", "QUESITOS" },
-        ["FALAR DE LAUDO"] = new[] { "MANIFESTAÇÃO AO LAUDO", "MANIFESTACAO AO LAUDO", "IMPUGNAÇÃO AO LAUDO", "IMPUGNACAO AO LAUDO" },
-        ["DADOS BANCÁRIOS"] = new[] { "INFORMAR DADOS BANCÁRIOS", "INFORMAR DADOS BANCARIOS", "CONTAS", "DADOS PARA TRANSFERÊNCIA", "DADOS PARA TRANSFERENCIA", "HONORÁRIOS", "HONORARIOS" },
-        ["RECURSAL"] = new[] { "TURMA", "ACÓRDÃO", "ACORDAO", "DECISÃO", "DECISAO", "CONTRARRAZÕES", "CONTRARRAZOES", "CONTRAMINUTA", "EMBARGOS", "SENTENÇA", "SENTENCA" },
-        ["AUDIÊNCIA"] = new[] { "AUDIÊNCIA DESIGNADA", "AUDIENCIA DESIGNADA", "AUDIÊNCIA REDESIGNADA", "AUDIENCIA REDESIGNADA", "AUDIÊNCIA CANCELADA", "AUDIENCIA CANCELADA", "DATA DA AUDIÊNCIA", "DATA DA AUDIENCIA", "HORA DA AUDIÊNCIA", "HORA DA AUDIENCIA", "PAUTA DE AUDIÊNCIA", "PAUTA DE AUDIENCIA" },
-        ["CÁLCULOS"] = new[] { "CONTÁBIL", "CONTABIL", "ARTIGOS DE LIQUIDAÇÃO", "ARTIGOS DE LIQUIDACAO", "PLANILHA DE CÁLCULOS", "PLANILHA DE CALCULOS", "FALAR DE CÁLCULOS", "FALAR DE CALCULOS", "CÁLCULOS", "CALCULOS" },
-        ["INICIAL"] = new[] { "EMENDA A INICIAL", "CONEXÃO", "CONEXAO", "JUNTAR INICIAL", "PROCURAÇÃO", "PROCURACAO" },
-        ["MANIFESTAÇÃO"] = new[] { "REGULARIZAR POLO", "LITISPENDÊNCIA", "LITISPENDENCIA", "CONEXÃO", "CONEXAO", "EXCEÇÃO DE INCOMPETÊNCIA", "EXCECAO DE INCOMPETENCIA" },
-        ["DOCUMENTOS"] = new[] { "APRESENTE", "JUNTAR", "TRAZER" },
-        ["CHC"] = new[] { "HABILITAÇÃO DE CRÉDITO", "HABILITACAO DE CREDITO", "CHC" },
-        ["IMPUGNAÇÃO"] = new[] { "MANIFESTAÇÃO AOS DOCUMENTOS", "MANIFESTACAO AOS DOCUMENTOS", "IMPUGNAÇÃO", "IMPUGNACAO" }
+        ["EXECUÇÃO"] = new[] { "INDICAR MEIOS", "SEGUIMENTO DA EXECUÇÃO", "SEGUIMENTO DA EXECUCAO", "ENDEREÇO", "ENDERECO", "SOBRESTAMENTO", "EXECUÇÃO FISCAL", "EXECUCAO FISCAL", "PENHORA", "HASTA PÚBLICA", "HASTA PUBLICA", "LEILÃO", "LEILAO", "EXPROPRIAÇÃO", "EXPROPRIACAO", "SISBAJUD", "BLOQUEIO DE CREDITO", "BLOQUEIO DE CRÉDITO", "ATOS EXECUTORIOS", "ATOS EXECUTÓRIOS", "INICIADA A EXECUCAO", "INICIADA A EXECUÇÃO", "ORIENTAR A EXECUCAO", "ORIENTAR A EXECUÇÃO" },
+        ["ALVARÁ"] = new[] { "EXPEDIDO ALVARÁ", "EXPEDIDO ALVARA", "ALVARÁ DE LEVANTAMENTO", "ALVARA DE LEVANTAMENTO", "ALVARÁ JUDICIAL", "ALVARA JUDICIAL" },
+        ["PERÍCIA/QUESITOS"] = new[] { "AGENDAMENTO", "PERÍCIA", "PERICIA", "QUESITOS", "LAUDO PERICIAL", "PERITO", "PROVA PERICIAL", "EXAME PERICIAL" },
+        ["FALAR DE LAUDO"] = new[] { "MANIFESTAÇÃO AO LAUDO", "MANIFESTACAO AO LAUDO", "IMPUGNAÇÃO AO LAUDO", "IMPUGNACAO AO LAUDO", "LAUDO COMPLEMENTAR", "FALAR SOBRE O LAUDO", "MANIFESTAR SOBRE LAUDO" },
+        ["DADOS BANCÁRIOS"] = new[] { "INFORMAR DADOS BANCÁRIOS", "INFORMAR DADOS BANCARIOS", "CONTAS", "DADOS PARA TRANSFERÊNCIA", "DADOS PARA TRANSFERENCIA", "HONORÁRIOS", "HONORARIOS", "DEPÓSITO", "DEPOSITO", "PAGAMENTO" },
+        ["RECURSAL"] = new[] { "TURMA", "ACÓRDÃO", "ACORDAO", "DECISÃO", "DECISAO", "CONTRARRAZÕES", "CONTRARRAZOES", "CONTRAMINUTA", "EMBARGOS", "SENTENÇA", "SENTENCA", "RECURSO", "APELAÇÃO", "APELACAO", "AGRAVO", "RECURSO ORDINÁRIO", "RECURSO ORDINARIO" },
+        ["AUDIÊNCIA"] = new[] { "AUDIÊNCIA DESIGNADA", "AUDIENCIA DESIGNADA", "AUDIÊNCIA REDESIGNADA", "AUDIENCIA REDESIGNADA", "AUDIÊNCIA CANCELADA", "AUDIENCIA CANCELADA", "DATA DA AUDIÊNCIA", "DATA DA AUDIENCIA", "HORA DA AUDIÊNCIA", "HORA DA AUDIENCIA", "PAUTA DE AUDIÊNCIA", "PAUTA DE AUDIENCIA", "FOI REDESIGNADA", "FOI DESIGNADA", "AUDIENCIA UNA", "AUDIÊNCIA UNA", "AUSENCIA DO RECLAMANTE", "AUSÊNCIA DO RECLAMANTE", "REDESIGNO AUDIENCIA", "REDESIGNO AUDIÊNCIA", "REDESIGNO A AUDIENCIA", "REDESIGNO A AUDIÊNCIA", "REDESIGNA A AUDIENCIA", "REDESIGNA A AUDIÊNCIA", "REDESIGNA-SE A AUDIENCIA", "REDESIGNA-SE A AUDIÊNCIA", "REDESIGNACAO DA AUDIENCIA", "REDESIGNAÇÃO DA AUDIÊNCIA", "AUDIENCIA DE INSTRUÇÃO", "AUDIENCIA DE INSTRUCAO", "AUDIÊNCIA DE INSTRUÇÃO", "DESIGNO AUDIENCIA", "DESIGNO AUDIÊNCIA", "INSTRUÇÃO E JULGAMENTO", "INSTRUCAO E JULGAMENTO", "TENTATIVA DE CONCILIACAO", "TENTATIVA DE CONCILIAÇÃO", "AUDIENCIA INICIAL", "AUDIÊNCIA INICIAL" },
+        ["CÁLCULOS"] = new[] { "CONTÁBIL", "CONTABIL", "ARTIGOS DE LIQUIDAÇÃO", "ARTIGOS DE LIQUIDACAO", "PLANILHA DE CÁLCULOS", "PLANILHA DE CALCULOS", "FALAR DE CÁLCULOS", "FALAR DE CALCULOS", "APRESENTE CÁLCULOS", "APRESENTE CALCULOS", "LIQUIDAÇÃO", "LIQUIDACAO", "ATUALIZAÇÃO DE CÁLCULOS", "ATUALIZACAO DE CALCULOS" },
+        ["INICIAL"] = new[] { "EMENDA A INICIAL", "CONEXÃO", "CONEXAO", "JUNTAR INICIAL", "PROCURAÇÃO", "PROCURACAO", "EMENDA À INICIAL", "REGULARIZAR INICIAL", "COMPLEMENTAR INICIAL" },
+        ["MANIFESTAÇÃO"] = new[] { "REGULARIZAR POLO", "LITISPENDÊNCIA", "LITISPENDENCIA", "EXCEÇÃO DE INCOMPETÊNCIA", "EXCECAO DE INCOMPETENCIA", "PRAZO PARA MANIFESTAÇÃO", "PRAZO PARA MANIFESTACAO", "VISTA DOS AUTOS", "MANIFESTE-SE", "MANIFESTE", "FALAR SOBRE A PETICAO", "FALAR SOBRE A PETIÇÃO" },
+        ["DOCUMENTOS"] = new[] { "APRESENTE DOCUMENTOS", "JUNTAR DOCUMENTOS", "TRAZER DOCUMENTOS", "JUNTADA DE DOCUMENTOS", "DOCUMENTOS FALTANTES" },
+        ["CHC"] = new[] { "HABILITAÇÃO DE CRÉDITO", "HABILITACAO DE CREDITO", "CHC", "CRÉDITO HABILITADO", "CREDITO HABILITADO" },
+        ["IMPUGNAÇÃO"] = new[] { "MANIFESTAÇÃO AOS DOCUMENTOS", "MANIFESTACAO AOS DOCUMENTOS", "IMPUGNAÇÃO", "IMPUGNACAO", "IMPUGNAR", "CONTESTAÇÃO", "CONTESTACAO" }
     };
 
-    // Padrão CNJ: 0000000-00.0000.0.00.0000
+    // Marcador de publicação no documento: "Publicação: 1 de 219"
+    private static readonly Regex PublicacaoMarcadorRegex = new(
+        @"Publicação\s*:\s*\d+\s*de\s*\d+",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    // Padrão CNJ genérico — usado para extrair o número de processo de dentro de um bloco
     private static readonly Regex ProcessoRegex = new(
         @"\b(\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4})\b",
-        RegexOptions.Compiled);
-
-    // Padrões alternativos de número de processo
-    private static readonly Regex ProcessoAlternativoRegex = new(
-        @"\b(\d{3,7}[\./-]\d{2,4}[\./-]?\d{0,4}[\./-]?\d{0,4})\b",
         RegexOptions.Compiled);
 
     private static readonly Regex DataRegex = new(
@@ -138,109 +138,106 @@ public class ClassificationService : IClassificationService
         }
 
         // Classificar setor baseado em palavras-chave
-        result.Setor = ClassifySetor(contentUpper);
+        var (setor, palavraChave) = ClassifySetor(contentUpper);
+        result.Setor = setor;
+        result.PalavraChaveUsada = palavraChave;
 
         return result;
     }
 
-    private string ClassifySetor(string contentUpper)
+    private (string setor, string? palavraChave) ClassifySetor(string contentUpper)
     {
-        _logger.LogInformation("=== CLASSIFICAÇÃO DE SETOR ===");
-        _logger.LogInformation("Conteúdo (primeiros 500 chars): {Content}", contentUpper.Length > 500 ? contentUpper.Substring(0, 500) : contentUpper);
-
-        var setorScores = new Dictionary<string, int>();
+        // Guarda score, última posição, palavras e linha
+        var setorInfo = new Dictionary<string, (int score, int lastPosition, List<(string keyword, int position)> keywordsWithPosition)>();
 
         foreach (var (setor, keywords) in SetorKeywords)
         {
-            var matchedKeywords = keywords.Where(keyword => contentUpper.Contains(keyword.ToUpperInvariant())).ToList();
-            var score = matchedKeywords.Count;
+            var matchedKeywords = new List<(string keyword, int position)>();
+            int lastPosition = -1;
 
-            if (score > 0)
+            foreach (var keyword in keywords)
             {
-                setorScores[setor] = score;
-                _logger.LogInformation("Setor: {Setor} - Palavras encontradas: {Keywords} - Score: {Score}", setor, string.Join(", ", matchedKeywords), score);
+                var keywordUpper = keyword.ToUpperInvariant();
+                var position = contentUpper.LastIndexOf(keywordUpper);
+
+                if (position >= 0)
+                {
+                    matchedKeywords.Add((keyword, position));
+                    if (position > lastPosition)
+                    {
+                        lastPosition = position;
+                    }
+                }
+            }
+
+            if (matchedKeywords.Count > 0)
+            {
+                setorInfo[setor] = (matchedKeywords.Count, lastPosition, matchedKeywords);
             }
         }
 
-        if (setorScores.Count > 0)
+        if (setorInfo.Count > 0)
         {
-            var maxScore = setorScores.Max(s => s.Value);
-            var setorEscolhido = setorScores.First(s => s.Value == maxScore).Key;
-            _logger.LogInformation("SETOR ESCOLHIDO: {Setor} (score: {Score})", setorEscolhido, maxScore);
-            return setorEscolhido;
+            var maxScore = setorInfo.Max(s => s.Value.score);
+            var topSetores = setorInfo.Where(s => s.Value.score == maxScore).ToList();
+
+            string setorEscolhido;
+            string palavraUsada;
+            if (topSetores.Count == 1)
+            {
+                var escolhido = topSetores.First();
+                setorEscolhido = escolhido.Key;
+                // Pega apenas a palavra com maior posição (mais próxima do fim)
+                var melhorKeyword = escolhido.Value.keywordsWithPosition.OrderByDescending(k => k.position).First();
+                palavraUsada = melhorKeyword.keyword;
+            }
+            else
+            {
+                // Em caso de empate, escolhe o setor cuja palavra aparece mais no fim do documento
+                var escolhido = topSetores.OrderByDescending(s => s.Value.lastPosition).First();
+                setorEscolhido = escolhido.Key;
+                var melhorKeyword = escolhido.Value.keywordsWithPosition.OrderByDescending(k => k.position).First();
+                palavraUsada = melhorKeyword.keyword;
+            }
+
+            return (setorEscolhido, palavraUsada);
         }
 
-        _logger.LogInformation("Nenhum setor identificado - retornando N/A");
-        return "N/A";
+        return ("N/A", null);
     }
 
     public async Task<List<DocumentClassificationResult>> ExtractMultiplePublicationsAsync(string content)
     {
         var results = new List<DocumentClassificationResult>();
 
-        // Encontrar todas as ocorrências de números de processo
-        var processoMatches = ProcessoRegex.Matches(content);
+        // Tentar dividir pelo marcador "Publicação: X de Y"
+        var marcadorMatches = PublicacaoMarcadorRegex.Matches(content);
 
-        if (processoMatches.Count <= 1)
+        _logger.LogDebug("Marcadores 'Publicação: X de Y' encontrados: {Count}", marcadorMatches.Count);
+
+        if (marcadorMatches.Count > 1)
         {
-            // Se houver 0 ou 1 processo, tenta dividir por palavras-chave
-            var publications = SplitByKeywords(content);
-
-            if (publications.Count <= 1)
-            {
-                // Se não conseguir dividir, processa como documento único
-                var singleResult = await ClassifyAndExtractAsync(content);
-                results.Add(singleResult);
-                return results;
-            }
-
-            foreach (var pub in publications)
-            {
-                if (!string.IsNullOrWhiteSpace(pub))
-                {
-                    var result = await ClassifyAndExtractAsync(pub);
-                    if (result.NumeroProcesso != null || result.Tipo != TipoDocumento.Outros)
-                    {
-                        results.Add(result);
-                    }
-                }
-            }
-        }
-        else
-        {
-            // Dividir o conteúdo baseado nas posições dos números de processo
-            var positions = new List<(int start, string processo)>();
-
-            foreach (Match match in processoMatches)
-            {
-                positions.Add((match.Index, match.Value));
-            }
-
-            // Ordenar por posição
-            positions = positions.OrderBy(p => p.start).ToList();
+            // Dividir o documento a cada marcador
+            var positions = marcadorMatches.Select(m => m.Index).ToList();
 
             for (int i = 0; i < positions.Count; i++)
             {
-                int start = positions[i].start;
-                int end = (i + 1 < positions.Count) ? positions[i + 1].start : content.Length;
+                int start = positions[i];
+                int end = (i + 1 < positions.Count) ? positions[i + 1] : content.Length;
 
-                // Pegar um pouco antes do número do processo para contexto
-                int contextStart = Math.Max(0, start - 200);
-                var block = content.Substring(contextStart, end - contextStart);
+                var block = content.Substring(start, end - start);
 
                 var result = await ClassifyAndExtractAsync(block);
-                result.NumeroProcesso = positions[i].processo;
                 results.Add(result);
             }
+
+            return results;
         }
 
-        // Se não encontrou nenhuma publicação, retorna ao menos uma com o documento inteiro
-        if (results.Count == 0)
-        {
-            var singleResult = await ClassifyAndExtractAsync(content);
-            results.Add(singleResult);
-        }
-
+        // Fallback: processar documento inteiro como uma única publicação
+        _logger.LogWarning("Marcador 'Publicação: X de Y' não encontrado. Processando como documento único.");
+        var singleResult = await ClassifyAndExtractAsync(content);
+        results.Add(singleResult);
         return results;
     }
 
