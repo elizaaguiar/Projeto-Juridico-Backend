@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
-    .WriteTo.Console()
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -75,7 +74,6 @@ app.UseCors("AllowAngular");
 app.UseAuthorization();
 app.MapControllers();
 
-Log.Information("API iniciada e pronta para receber requisições");
-
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+Log.Information("API iniciada na porta {Port}", port);
 app.Run($"http://0.0.0.0:{port}");
