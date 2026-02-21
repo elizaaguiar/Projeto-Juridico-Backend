@@ -39,24 +39,23 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Database - Verifica conexão (tabelas criadas pelo init.sql)
+// Database - Aplica migrations automaticamente
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    // Aguarda o banco estar disponível
     var retries = 10;
     while (retries > 0)
     {
         try
         {
-            db.Database.CanConnect();
-            Log.Information("Conexão com banco de dados estabelecida");
+            db.Database.Migrate();
+            Log.Information("Banco de dados pronto (migrations aplicadas)");
             break;
         }
         catch (Exception ex)
         {
             retries--;
-            Log.Warning("Aguardando banco de dados... Tentativas restantes: {Retries}", retries);
+            Log.Warning("Aguardando banco de dados... {Message}. Tentativas restantes: {Retries}", ex.Message, retries);
             if (retries == 0) throw;
             Thread.Sleep(2000);
         }
