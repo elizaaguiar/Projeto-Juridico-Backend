@@ -1,4 +1,5 @@
 using JuridicoAnalise.Application.Interfaces;
+using JuridicoAnalise.Domain.Entities;
 using JuridicoAnalise.Domain.Enums;
 using JuridicoAnalise.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -27,12 +28,12 @@ public class ClassificationService : IClassificationService
     // Palavras-chave para classificação de SETOR
     private static readonly Dictionary<string, string[]> SetorKeywords = new()
     {
-        ["EXECUÇÃO"] = new[] { "INDICAR MEIOS", "SEGUIMENTO DA EXECUÇÃO", "SEGUIMENTO DA EXECUCAO", "ENDEREÇO", "ENDERECO", "SOBRESTAMENTO", "EXECUÇÃO FISCAL", "EXECUCAO FISCAL", "PENHORA", "HASTA PÚBLICA", "HASTA PUBLICA", "LEILÃO", "LEILAO", "EXPROPRIAÇÃO", "EXPROPRIACAO", "SISBAJUD", "BLOQUEIO DE CREDITO", "BLOQUEIO DE CRÉDITO", "ATOS EXECUTORIOS", "ATOS EXECUTÓRIOS", "INICIADA A EXECUCAO", "INICIADA A EXECUÇÃO", "ORIENTAR A EXECUCAO", "ORIENTAR A EXECUÇÃO" },
+        ["EXECUÇÃO"] = new[] { "INDICAR MEIOS", "SEGUIMENTO DA EXECUÇÃO", "SEGUIMENTO DA EXECUCAO", "SOBRESTAMENTO", "EXECUÇÃO FISCAL", "EXECUCAO FISCAL", "PENHORA", "HASTA PÚBLICA", "HASTA PUBLICA", "LEILÃO", "LEILAO", "EXPROPRIAÇÃO", "EXPROPRIACAO", "SISBAJUD", "BLOQUEIO DE CREDITO", "BLOQUEIO DE CRÉDITO", "ATOS EXECUTORIOS", "ATOS EXECUTÓRIOS", "INICIADA A EXECUCAO", "INICIADA A EXECUÇÃO", "ORIENTAR A EXECUCAO", "ORIENTAR A EXECUÇÃO" },
         ["ALVARÁ"] = new[] { "EXPEDIDO ALVARÁ", "EXPEDIDO ALVARA", "ALVARÁ DE LEVANTAMENTO", "ALVARA DE LEVANTAMENTO", "ALVARÁ JUDICIAL", "ALVARA JUDICIAL" },
         ["PERÍCIA/QUESITOS"] = new[] { "AGENDAMENTO", "PERÍCIA", "PERICIA", "QUESITOS", "LAUDO PERICIAL", "PERITO", "PROVA PERICIAL", "EXAME PERICIAL" },
         ["FALAR DE LAUDO"] = new[] { "MANIFESTAÇÃO AO LAUDO", "MANIFESTACAO AO LAUDO", "IMPUGNAÇÃO AO LAUDO", "IMPUGNACAO AO LAUDO", "LAUDO COMPLEMENTAR", "FALAR SOBRE O LAUDO", "MANIFESTAR SOBRE LAUDO" },
         ["DADOS BANCÁRIOS"] = new[] { "INFORMAR DADOS BANCÁRIOS", "INFORMAR DADOS BANCARIOS", "CONTAS", "DADOS PARA TRANSFERÊNCIA", "DADOS PARA TRANSFERENCIA", "HONORÁRIOS", "HONORARIOS", "DEPÓSITO", "DEPOSITO", "PAGAMENTO" },
-        ["RECURSAL"] = new[] { "TURMA", "ACÓRDÃO", "ACORDAO", "DECISÃO", "DECISAO", "CONTRARRAZÕES", "CONTRARRAZOES", "CONTRAMINUTA", "EMBARGOS", "SENTENÇA", "SENTENCA", "RECURSO", "APELAÇÃO", "APELACAO", "AGRAVO", "RECURSO ORDINÁRIO", "RECURSO ORDINARIO" },
+        ["RECURSAL"] = new[] { "TURMA", "ACÓRDÃO", "ACORDAO", "CONTRARRAZÕES", "CONTRARRAZOES", "CONTRAMINUTA", "EMBARGOS", "SENTENÇA", "SENTENCA", "RECURSO", "APELAÇÃO", "APELACAO", "AGRAVO", "RECURSO ORDINÁRIO", "RECURSO ORDINARIO" },
         ["AUDIÊNCIA"] = new[] { "AUDIÊNCIA DESIGNADA", "AUDIENCIA DESIGNADA", "AUDIÊNCIA REDESIGNADA", "AUDIENCIA REDESIGNADA", "AUDIÊNCIA CANCELADA", "AUDIENCIA CANCELADA", "DATA DA AUDIÊNCIA", "DATA DA AUDIENCIA", "HORA DA AUDIÊNCIA", "HORA DA AUDIENCIA", "PAUTA DE AUDIÊNCIA", "PAUTA DE AUDIENCIA", "FOI REDESIGNADA", "FOI DESIGNADA", "AUDIENCIA UNA", "AUDIÊNCIA UNA", "AUSENCIA DO RECLAMANTE", "AUSÊNCIA DO RECLAMANTE", "REDESIGNO AUDIENCIA", "REDESIGNO AUDIÊNCIA", "REDESIGNO A AUDIENCIA", "REDESIGNO A AUDIÊNCIA", "REDESIGNA A AUDIENCIA", "REDESIGNA A AUDIÊNCIA", "REDESIGNA-SE A AUDIENCIA", "REDESIGNA-SE A AUDIÊNCIA", "REDESIGNACAO DA AUDIENCIA", "REDESIGNAÇÃO DA AUDIÊNCIA", "AUDIENCIA DE INSTRUÇÃO", "AUDIENCIA DE INSTRUCAO", "AUDIÊNCIA DE INSTRUÇÃO", "DESIGNO AUDIENCIA", "DESIGNO AUDIÊNCIA", "INSTRUÇÃO E JULGAMENTO", "INSTRUCAO E JULGAMENTO", "TENTATIVA DE CONCILIACAO", "TENTATIVA DE CONCILIAÇÃO", "AUDIENCIA INICIAL", "AUDIÊNCIA INICIAL" },
         ["CÁLCULOS"] = new[] { "CONTÁBIL", "CONTABIL", "ARTIGOS DE LIQUIDAÇÃO", "ARTIGOS DE LIQUIDACAO", "PLANILHA DE CÁLCULOS", "PLANILHA DE CALCULOS", "FALAR DE CÁLCULOS", "FALAR DE CALCULOS", "APRESENTE CÁLCULOS", "APRESENTE CALCULOS", "LIQUIDAÇÃO", "LIQUIDACAO", "ATUALIZAÇÃO DE CÁLCULOS", "ATUALIZACAO DE CALCULOS" },
         ["INICIAL"] = new[] { "EMENDA A INICIAL", "CONEXÃO", "CONEXAO", "JUNTAR INICIAL", "PROCURAÇÃO", "PROCURACAO", "EMENDA À INICIAL", "REGULARIZAR INICIAL", "COMPLEMENTAR INICIAL" },
@@ -78,6 +79,12 @@ public class ClassificationService : IClassificationService
 
     public async Task<DocumentClassificationResult> ClassifyAndExtractAsync(string content)
     {
+        var palavrasChave = await _palavraChaveRepository.GetAllAsync();
+        return ClassifyAndExtractInternal(content, palavrasChave);
+    }
+
+    private DocumentClassificationResult ClassifyAndExtractInternal(string content, IEnumerable<PalavraChave> palavrasChave)
+    {
         var result = new DocumentClassificationResult();
         var contentUpper = content.ToUpperInvariant();
 
@@ -95,8 +102,7 @@ public class ClassificationService : IClassificationService
             result.DataPublicacao = data;
         }
 
-        // Buscar palavras-chave do banco de dados
-        var palavrasChave = await _palavraChaveRepository.GetAllAsync();
+        // Combinar keywords do banco com as padrão
         var keywordsFromDb = palavrasChave
             .GroupBy(p => p.TipoDocumento)
             .ToDictionary(
@@ -104,7 +110,6 @@ public class ClassificationService : IClassificationService
                 g => g.Select(p => p.Termo.ToUpperInvariant()).ToArray()
             );
 
-        // Combinar com keywords padrão
         var allKeywords = new Dictionary<TipoDocumento, string[]>();
         foreach (var tipo in Enum.GetValues<TipoDocumento>())
         {
@@ -210,6 +215,9 @@ public class ClassificationService : IClassificationService
     {
         var results = new List<DocumentClassificationResult>();
 
+        // Buscar keywords do banco uma única vez para todas as publicações
+        var palavrasChave = await _palavraChaveRepository.GetAllAsync();
+
         // Tentar dividir pelo marcador "Publicação: X de Y"
         var marcadorMatches = PublicacaoMarcadorRegex.Matches(content);
 
@@ -217,7 +225,6 @@ public class ClassificationService : IClassificationService
 
         if (marcadorMatches.Count > 1)
         {
-            // Dividir o documento a cada marcador
             var positions = marcadorMatches.Select(m => m.Index).ToList();
 
             for (int i = 0; i < positions.Count; i++)
@@ -226,8 +233,7 @@ public class ClassificationService : IClassificationService
                 int end = (i + 1 < positions.Count) ? positions[i + 1] : content.Length;
 
                 var block = content.Substring(start, end - start);
-
-                var result = await ClassifyAndExtractAsync(block);
+                var result = ClassifyAndExtractInternal(block, palavrasChave);
                 results.Add(result);
             }
 
@@ -236,8 +242,7 @@ public class ClassificationService : IClassificationService
 
         // Fallback: processar documento inteiro como uma única publicação
         _logger.LogWarning("Marcador 'Publicação: X de Y' não encontrado. Processando como documento único.");
-        var singleResult = await ClassifyAndExtractAsync(content);
-        results.Add(singleResult);
+        results.Add(ClassifyAndExtractInternal(content, palavrasChave));
         return results;
     }
 
