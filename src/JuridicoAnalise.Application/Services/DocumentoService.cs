@@ -188,7 +188,8 @@ public class DocumentoService : IDocumentoService
                             PalavraChaveUsada = pub.PalavraChaveUsada,
                             CaminhoArquivo = fileName,
                             NumeroProcesso = pub.NumeroProcesso ?? "N/A",
-                            DataPublicacao = pub.DataPublicacao ?? DateTime.UtcNow
+                            DataPublicacao = pub.DataPublicacao ?? DateTime.UtcNow,
+                            InicioPrazo = pub.InicioPrazo
                         };
                         documentos.Add(documento);
                         adicionados++;
